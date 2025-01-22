@@ -20,6 +20,14 @@ def signup():
             return jsonify({'error': 'Email and password are required'}), 400
 
 
+        # Validate email format
+        try:
+            validate_email(data['email'])
+        except EmailNotValidError:
+            return jsonify({'error': 'Invalid email format'}), 400
+
+
+
         # Enforce password strength
         if len(data['password']) < 8:
             return jsonify({'error': 'Password must be at least 8 characters long'}), 400
