@@ -22,7 +22,7 @@ The Macronutrient Tracker API allows users to set macronutrient goals, log food 
 
 The API is hosted at:  
 
-[https://mt-z1c9.onrender.com]
+[https://macronutrient-tracker-api.onrender.com]
 
 ---
 
@@ -60,15 +60,11 @@ The API is hosted at:
 
     pip install -r requirements.txt
 
-3. Set up environment variables:
+3. Set up environment variables and database:
 
-    Create a .env file in the root directory.
-    Add the following:
-
-    FLASK_APP=app.py
-    FLASK_ENV=development
-    JWT_SECRET_KEY=your_secret_key
-    DATABASE_URL=your_database_url
+    Create a sqlite or postges database  
+        
+    Link the database by updating the line app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL') in app/__init__.py 
 
 4. Initialize the database:
 
