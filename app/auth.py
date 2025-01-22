@@ -21,10 +21,10 @@ def signup():
 
 
         # Validate email format
-        try:
-            validate_email(data['email'])
-        except EmailNotValidError:
-            return jsonify({'error': 'Invalid email format'}), 400
+        # try:
+        #     validate_email(data['email'])
+        # except EmailNotValidError:
+        #     return jsonify({'error': 'Invalid email format'}), 400
 
 
 

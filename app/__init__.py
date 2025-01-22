@@ -19,10 +19,14 @@ def create_app():
     app = Flask(__name__)
 
     # Configure the app
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')  
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://strider:a@localhost/mt')  
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Improves performance by disabling event tracking
     app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'default_jwt_secret')  # Use a secure default in development
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=20)  # Customize token expiry time
+
+
+        
+    
 
     # Initialize extensions with the app instance
     db.init_app(app)
