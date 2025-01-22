@@ -19,7 +19,7 @@ def home():
         "message": "Welcome to the Macronutrient Tracker API!",
         "version": "0.1",
         "status": "online",
-        "docs": ""  
+        "docs": "https://github.com/robord1/macronutrient-tracker-api"  
     }
     return jsonify(response), 200
     

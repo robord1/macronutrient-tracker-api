@@ -1,0 +1,371 @@
+
+
+1. POST /signup
+
+
+    Description
+
+        Endpoint for user registration. It accepts an email and password, validates the input, and creates a new user account.
+
+    Request Format
+
+        URL: /signup
+        Method: POST
+        Headers: Content-Type: application/json
+        Body (JSON):
+
+        {
+          "email": "user@example.com",
+          "password": "securepassword"
+        }
+
+    Validation
+
+        Email:
+            Must be provided.
+            Must follow a valid email format.
+        Password:
+            Must be provided.
+            Must be at least 8 characters long.
+        Existing Users:
+            If an account with the provided email already exists, the request fails.
+
+    Responses
+
+        201 Created:
+
+            {
+              "message": "User created successfully"
+            }
+
+        400 Bad Request (Missing or invalid input):
+
+            {
+              "error": "Email and password are required"
+            }
+
+            or
+
+            {
+              "error": "Invalid email format"
+            }
+
+            or
+
+            {
+              "error": "Password must be at least 8 characters long"
+            }
+
+        409 Conflict (Duplicate account):
+
+            {
+              "error": "Unable to process your request"
+            }
+
+        500 Internal Server Error:
+
+            {
+              "error": "An unexpected error occurred"
+            }
+
+
+
+2. POST /login
+
+    Description
+
+        Endpoint for user authentication. It validates the provided email and password, and returns a JWT token if credentials are correct.
+    
+    Request Format
+
+        URL: /login
+        Method: POST
+        Headers: Content-Type: application/json
+        Body (JSON):
+
+        {
+          "email": "user@example.com",
+          "password": "securepassword"
+        }
+
+    Validation
+
+        Email and Password:
+            Both must be provided.
+        Authentication:
+            The email must match an existing user.
+            The password must match the stored hashed password.
+
+    Responses
+
+        200 OK:
+
+            {
+              "message": "Login successful",
+              "token": "jwt-token-string"
+            }
+
+        400 Bad Request (Missing input):
+
+            {
+                "error": "Email and password are required"
+            }
+
+        401 Unauthorized (Invalid credentials):
+
+            {
+                "error": "Invalid credentials"
+            }
+
+        500 Internal Server Error:
+
+            {
+                "error": "An unexpected error occurred"
+            }
+
+
+
+3. GET /
+    Description
+
+        Root endpoint that provides basic information about the Macronutrient Tracker API and confirms its status.
+    
+    Request Format
+
+        URL: /
+        Method: GET
+
+    Response
+
+        200 OK:
+
+            {
+              "message": "Welcome to the Macronutrient Tracker API!",
+              "version": "0.1",
+              "status": "online",
+              "docs": ""
+            }
+
+
+4. GET /goals
+    Description
+
+        Fetches the macronutrient goals for the authenticated user.
+    
+    Request Format
+
+        URL: /goals
+        Method: GET
+        Headers:
+            Authorization: Bearer <JWT> (required)
+
+    Response
+
+        200 OK (Goals found):
+
+            {
+              "user_id": "123",
+              "goals": [
+                {
+                  "id": 1,
+                  "protein": 150,
+                  "carbs": 200,
+                  "fat": 70,
+                  "sodium": 2300
+                }
+              ]
+            }
+
+        404 Not Found (No goals for the user):
+
+            {
+              "error": "No goals found for this user"
+            }
+
+        500 Internal Server Error:
+
+            {
+              "error": "An unexpected error occurred"
+            }
+
+
+5. POST /goals
+
+    Description
+
+        Creates new macronutrient goals for the authenticated user.
+    
+    Request Format
+
+        URL: /goals
+        Method: POST
+        Headers:
+            Authorization: Bearer <JWT> (required)
+            Content-Type: application/json
+        Body (JSON):
+
+        {
+          "protein": 150,
+          "carbs": 200,
+          "fat": 70,
+          "sodium": 2300
+        }
+
+    Response
+
+        201 Created:
+
+            {
+              "message": "Goals set successfully"
+            }
+
+        400 Bad Request (Missing body or fields):
+
+            {
+              "error": "Request body is required"
+            }
+
+            or
+
+            {
+              "error": "Missing field: protein"
+            }
+
+        500 Internal Server Error:
+
+            {
+              "error": "An unexpected error occurred"
+            }
+
+
+
+
+
+
+
+6. POST /food-entries
+
+    Description
+
+    Add a new food entry for the authenticated user.
+
+    Request Format
+
+        URL: /food-entries
+        Method: POST
+        Headers:
+            Authorization: Bearer <JWT> (required)
+            Content-Type: application/json
+        Body (JSON):
+
+        {
+          "food_name": "Grilled Chicken",
+          "protein": 25,
+          "carbs": 0,
+          "fat": 3,
+          "sodium": 70,
+          "date": "2025-01-22"  // (optional, defaults to today's date)
+        }
+
+    Validation
+
+        Required Fields:
+            food_name: Must be a non-empty string (max 120 characters).
+            protein, carbs, fat, sodium: Must be non-negative integers or floats.
+        Optional Fields:
+            date: Must be in the format YYYY-MM-DD. Defaults to today’s date if not provided.
+
+    Responses
+
+        201 Created (Success):
+
+            {
+              "message": "Food entry added successfully",
+              "food_entry": {
+                "id": 1,
+                "food_name": "Grilled Chicken",
+                "protein": 25,
+                "carbs": 0,
+                "fat": 3,
+                "sodium": 70,
+                "date": "2025-01-22"
+              }
+            }
+
+        400 Bad Request (Missing or invalid input):
+
+            {
+              "error": "Missing field: protein"
+            }
+
+            or
+
+            {
+              "error": "food_name must be a non-empty string with a maximum length of 120 characters"
+            }
+
+            or
+
+            {
+              "error": "Invalid date format. Use YYYY-MM-DD."
+            }
+
+        500 Internal Server Error:
+
+            {
+              "error": "An unexpected error occurred"
+            }
+
+
+
+7. GET /food-entries
+
+    Description
+
+        Retrieve food entries for the authenticated user, optionally filtered by a specific date.
+    
+    Request Format
+
+        URL: /food-entries
+        Method: GET
+        Headers:
+            Authorization: Bearer <JWT> (required)
+        Query Parameters:
+            date: Filter entries by a specific date (optional). Format: YYYY-MM-DD. Defaults to today’s date if not provided.
+
+    Responses
+
+        200 OK (Success):
+
+            [
+              {
+                "id": 1,
+                "food_name": "Grilled Chicken",
+                "protein": 25,
+                "carbs": 0,
+                "fat": 3,
+                "sodium": 70,
+                "date": "2025-01-22"
+              },
+              {
+                "id": 2,
+                "food_name": "Steamed Broccoli",
+                "protein": 3,
+                "carbs": 6,
+                "fat": 0.5,
+                "sodium": 20,
+                "date": "2025-01-22"
+              }
+            ]
+
+        400 Bad Request (Invalid date format):
+
+            {
+              "error": "Invalid date format. Use YYYY-MM-DD."
+            }
+
+        500 Internal Server Error:
+
+            {
+              "error": "An unexpected error occurred"
+            }
